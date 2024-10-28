@@ -1,0 +1,20 @@
+{
+std::cout << "Input Number:";
+int input_number;
+std::cin >> input_number;
+bool prime[input_number+1] = {true};
+
+int div;
+for (div = 2; pdiv * div <= input_number; div++) {
+        if (prime[div] == true) {
+	    int counter;
+            for (counter = div * div; counter <= input_number; counter += div)
+                prime[counter] = false;
+        }
+ }
+std::cout << "All prime numbers up to n are: ";
+for (int div = 2; div <= input_number; div++)
+    if (prime[div])
+        std::cout << div << " ";
+return;
+}

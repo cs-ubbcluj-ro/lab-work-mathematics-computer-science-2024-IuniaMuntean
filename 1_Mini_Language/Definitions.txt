@@ -1,0 +1,56 @@
+Lexic:
+a. Special symbols:
+	Operators: + - / * = > < | &
+
+	Separatos: [ ] { } ; : space ' ' " "
+
+	Reserved words: if else while do break continue int float return
+        char case switch unsigned bool
+
+b. Identifiers: 
+	identifier ::= letter generalID {generalID}
+			letter ::= "A"|"B"|...|"Z"|"a"|"b"|...|"z"
+			digit::="0"|"1"|...|"9"
+			underline ::= "_"
+	generalID ::= letter | underline | digit
+c. Constants Rules
+	sign := "+"|"-"
+	number := digit{digit}
+	int := [sign]number
+	unsigned := number
+	float := int[decimal]
+			decimal := "."number
+	char := letter | digit
+	string := char{char}|" "
+	bool := "true" | "false"
+		 true:="1"  false:="0"
+	userDEF := "struct {" declLIST "}" identifier
+
+Syntax:
+	type ::= "int"|"unsigned"|"float"|"char"|"string"|"bool"|"userDEF" | array
+	array ::= type"["number"]"
+	program := "VAR" declLIST ";" cmpdstmt "."
+			  declLIST := declaration | declaration ";" declLIST
+				       declaration ::= type " " identifier
+	cmpdstmt ::= "{" stmtLIST "}"
+	 stmtLIST ::= stmt | stmt "{" stmtLIST "}"
+	  stmt ::= SIMPLEstmt| STRUCTstmt
+
+	   SIMPLEstmt ::= assignment | iostmt
+		assignment ::= identifier "=" expression
+			expression ::= expression "operator" term | term
+			 term ::= term "operator" factor | factor
+			   factor ::= "(" expression ")" | identifier | const
+		iostmt ::= "std::cin >> ""identifier | string"";" | "std::cout << ""identifier | string"";"
+
+	   STRUCTstmt ::= cmpdstmt|ifstmt|forstm|whilestmt|dostmt|breakstmt|returnstmt|switchstmt
+		ifstmt ::= "if" "("condition")" stmt | stmtLIST  ["ELSE" stmt | stmtLIST
+		forstm ::= "for" "(" assignment ";" condition ";" assignment ")"
+		whilestmt ::= "while ("condition")" stmt | stmtLIST
+		dostmt ::= "do" stmt | stmtLIST "while ("condition")"
+		breakstmt ::= exit loopstmt
+		returnstmt ::= "return" number | identifier
+		switchstmt ::= "switch"("condition")" stmt | stmtLIST casestmt
+		  casestmt::= casestmt | "case" identifier ":" stmt | stmtLIST | returnstmt
+		condition ::= expression RELATION expression
+   		RELATION ::= "<" | "<=" | "==" | ">=" | ">"

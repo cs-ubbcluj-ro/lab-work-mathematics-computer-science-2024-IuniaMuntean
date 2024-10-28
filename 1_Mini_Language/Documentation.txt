@@ -1,0 +1,8 @@
+Language Definitions:
+	Alphabet:
+		- Upper (A-Z) and lower case letters (a-z) of the English alphabet
+
+      		- Underline character '_';
+
+      		- Decimal digits (0-9);
+Language mirrors C++
