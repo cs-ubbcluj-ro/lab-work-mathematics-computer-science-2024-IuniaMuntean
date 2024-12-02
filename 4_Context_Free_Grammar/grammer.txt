@@ -1,0 +1,48 @@
+identifier -> letter generalID 
+		letter -> "A"|"B"|...|"Z"|"a"|"b"|...|"z"
+		digit -> "0"|"1"|...|"9"
+		underline -> "_"
+generalID -> letter | underline | digit | ε
+
+
+sign -> "+"|"-"
+number -> digit | number | digit number
+int -> sign number | ε
+unsigned -> number | ε
+float -> int decimal
+	decimal -> "."number | ε
+char -> letter | digit | ε
+string -> char | string | ε
+bool -> "true" | "false"
+	true->"1"  false->"0"
+userDEF -> "struct {" declLIST "}" identifier
+
+
+type -> "int"| "unsigned"| "float"| "char"| "string"| "bool"| "userDEF" | array
+array -> type"["number"]"
+program -> "VAR" declLIST cmpdstmt "."
+	declLIST -> declaration | declaration ", " declLIST | ";"
+		declaration -> type " " identifier
+cmpdstmt -> "{" stmtLIST "}"
+stmtLIST -> stmt | stmt "{" stmtLIST "}"
+	stmt -> SIMPLEstmt| STRUCTstmt
+	   SIMPLEstmt -> assignment | iostmt
+		assignment -> identifier "=" expression
+			expression -> expression "operator" term | term
+			 term -> term "operator" factor | factor
+			   operator -> "+" | "-" |  "/" | "*" | "=" | ">" | "<" | "|" | "&"
+			   factor -> "(" expression ")" | identifier 
+		iostmt -> "std::cin >> ""identifier | string"";" | "std::cout << ""identifier | string"";"
+
+
+STRUCTstmt -> cmpdstmt|ifstmt|forstm|whilestmt|dostmt|breakstmt|returnstmt
+ifstmt -> "if" condition stmt | "if" condition stmtLIST | "else" 
+		else -> "else" stmt | "else" stmLIST | ε
+forstm -> "for" "(" assignment ";" condition ";" assignment ")"
+whilestmt -> "while ("condition")" stmt | "while ("condition")" stmtLIST
+dostmt -> "do" stmt "while ("condition")" | "do" stmtLIST "while ("condition")"
+breakstmt -> exit loopstmt
+returnstmt -> "return" number | identifier
+		
+condition -> expression RELATION expression
+RELATION -> "<" | "<=" | "==" | ">=" | ">"
