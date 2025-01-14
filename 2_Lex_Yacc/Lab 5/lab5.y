@@ -12,6 +12,8 @@ FILE *yyin;
 int yylineno;
 
 int yylex(void);
+int production_indexes[100]; 
+int index_counter = 0;
 %}
 
 %start program
@@ -39,129 +41,132 @@ int yylex(void);
 %%
 
 program:
-    '{' declLIST cmpdstmt '}' 
-    | '{''\n' declLIST cmpdstmt '\n''}'
+     cmpdstmt 
     ;
 
 declLIST:
-    
-    | declLIST declaration ';'
+    declLIST 
+    { production_indexes[index_counter++] = 1; }
+    | declLIST declaration ';' { production_indexes[index_counter++] = 2; }
     ;
 
 declaration:
-    type IDENTIFIER ';'
+    type IDENTIFIER ';' { production_indexes[index_counter++] = 3; }
     ;
 
 type:
-    INT_T | UNSIGNED_T | FLOAT_T | CHAR_T | STRING_T | USERDEF | array
+    INT_T | UNSIGNED_T | FLOAT_T | CHAR_T | STRING_T | USERDEF | array { production_indexes[index_counter++] = 4; }
     ;
 
 array:
-    type '[' NUMBER ']'
+    type '[' NUMBER ']' { production_indexes[index_counter++] = 5; }
     ;
 
 cmpdstmt:
-    '{' stmtLIST '}'
+    '{' stmtLIST '}' { production_indexes[index_counter++] = 6; }
+    | '{''\n' stmtLIST '\n''}' { production_indexes[index_counter++] = 7; }
+    |
     ;
  
 stmtLIST:
-    
-    | stmt '{' stmtLIST '}'
+    stmt { production_indexes[index_counter++] = 8; }
+    | stmt '{' stmtLIST '}' { production_indexes[index_counter++] = 9; }
     ;
 
 stmt:
-    SIMPLEstmt
-    | STRUCTstmt
+    SIMPLEstmt { production_indexes[index_counter++] = 10; }
+    | STRUCTstmt { production_indexes[index_counter++] = 11; }
     ;
 
 SIMPLEstmt:
-    assignment
-    | iostmt
+    assignment { production_indexes[index_counter++] = 12; }
+    | iostmt { production_indexes[index_counter++] = 13; }
+    | declLIST { production_indexes[index_counter++] = 14; }
     ;
    
 iostmt:
-    CIN IDENTIFIER ';'
-    | COUT IDENTIFIER ';'
-    | CIN STRING ';'
-    | COUT STRING ';'
+    CIN IDENTIFIER ';' { production_indexes[index_counter++] = 15; }
+    | COUT IDENTIFIER ';' { production_indexes[index_counter++] = 16; }
+    | CIN STRING ';' { production_indexes[index_counter++] = 17; }
+    | COUT STRING ';' { production_indexes[index_counter++] = 18; }
     ;
 
 STRUCTstmt:
-    cmpdstmt
-    | ifstmt
-    | forstmt
-    | whilestmt
-    | dostmt
-    | breakstmt ';'
-    | returnstmt ';'
+    cmpdstmt { production_indexes[index_counter++] = 19; }
+    | ifstmt { production_indexes[index_counter++] = 20; }
+    | forstmt { production_indexes[index_counter++] = 21; }
+    | whilestmt { production_indexes[index_counter++] = 22; }
+    | dostmt { production_indexes[index_counter++] = 23; }
+    | breakstmt ';' { production_indexes[index_counter++] = 24; }
+    | returnstmt ';' { production_indexes[index_counter++] = 25; }
     ;
 
 assignment:
-    IDENTIFIER '=' expression ';'
+    IDENTIFIER '=' expression ';' { production_indexes[index_counter++] = 26; }
     ;
 
 expression:
-    expression operator term
-    | term
+    expression operator term { production_indexes[index_counter++] = 27; }
+    | term { production_indexes[index_counter++] = 28; }
     ;
 
 term:
-    term operator factor
-    | factor
+    term operator factor { production_indexes[index_counter++] = 29; }
+    | factor { production_indexes[index_counter++] = 30; }
     ;
 
 operator:
-    '+' 
-    | '-'
-    | '/' 
-    | '*' 
-    | '=' 
-    | '|' 
-    | '&'
+    '+'  { production_indexes[index_counter++] = 31; }
+    | '-' { production_indexes[index_counter++] = 32; }
+    | '/' { production_indexes[index_counter++] = 33; }
+    | '*' { production_indexes[index_counter++] = 34; }
+    | '=' { production_indexes[index_counter++] = 35; }
+    | '|' { production_indexes[index_counter++] = 36; }
+    | '&'{ production_indexes[index_counter++] = 37; }
     ;
 
 factor:
-    '(' expression ')'
-    | IDENTIFIER
-    | NUMBER
+    '(' expression ')' { production_indexes[index_counter++] = 38; }
+    | IDENTIFIER { production_indexes[index_counter++] = 39; }
+    | NUMBER { production_indexes[index_counter++] = 40; }
     ;
 
 ifstmt:
-    IF condition stmtLIST
-    | IF condition stmtLIST elsestmt
+    IF condition stmtLIST { production_indexes[index_counter++] = 41; }
+    | IF condition stmtLIST elsestmt { production_indexes[index_counter++] = 42; }
     ;
 
 elsestmt:
 
-    | ELSE stmtLIST
+    | ELSE stmtLIST { production_indexes[index_counter++] = 43; }
     ;
 
 forstmt:
-    FOR '(' assignment ';' condition ';' assignment ')' ';'
-    | FOR '(' assignment ';' condition ';' assignment ')' stmtLIST
+    FOR '(' assignment ';' condition ';' assignment ')' ';' { production_indexes[index_counter++] = 44; }
+    | FOR '(' assignment ';' condition ';' assignment ')' stmtLIST { production_indexes[index_counter++] = 45; }
     ;
 
 whilestmt:
-    WHILE '(' condition ')' ';'
-    | WHILE '(' condition ')' stmtLIST
+    WHILE '(' condition ')' ';' { production_indexes[index_counter++] = 46; }
+    | WHILE '(' condition ')' stmtLIST { production_indexes[index_counter++] = 47; }
     ;
 
 dostmt:
-    DO stmt WHILE '(' condition ')' ';'
-    | DO stmtLIST WHILE '(' condition ')' ';'
+    DO stmt WHILE '(' condition ')' ';' { production_indexes[index_counter++] = 48; }
+    | DO stmtLIST WHILE '(' condition ')' ';' { production_indexes[index_counter++] = 49; }
     ;
 
 breakstmt:
-    BREAK
+    BREAK { production_indexes[index_counter++] = 50; }
     ;
 
 returnstmt:
-    RETURN NUMBER
-    | RETURN IDENTIFIER
+    RETURN NUMBER { production_indexes[index_counter++] = 51; }
+    | RETURN IDENTIFIER { production_indexes[index_counter++] = 52; }
     ;
 
 condition:
-    expression RELATION expression
+    expression RELATION expression { production_indexes[index_counter++] = 5; }
     ;
 
 %%
@@ -311,9 +316,11 @@ int main(int argc, char *argv[]) {
 
     if (yyparse() == 0) {
         printf("\nParsing completed successfully.\n");
+        for (int i = 0; i < index_counter; ++i) { printf("Production %d used\n", production_indexes[i]);}
     } 
     else {
         printf("\nParsing failed.\n");
+        for (int i = 0; i < index_counter; ++i) { printf("Production %d used\n", production_indexes[i]);}
     }
     fclose(yyin);
     return 0;
